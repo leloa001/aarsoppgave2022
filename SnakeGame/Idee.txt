@@ -1,0 +1,9 @@
+Språk:
+*JAVA
+*Python
+
+Plan:
+Simpelt spill med et delt score-system på server
+nødvendig
+*Brukersystem
+*Score tabell
