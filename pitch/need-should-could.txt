@@ -1,0 +1,17 @@
+idee:
+spill med poengsystem som lagres på en data base og rangering på en server.
+
+
+Trenger:
+poengsystem
+DB tabell
+	-id
+	-Bruker
+	-Score
+	-Rank
+
+
+Bør ha:
+
+
+kan ha:
