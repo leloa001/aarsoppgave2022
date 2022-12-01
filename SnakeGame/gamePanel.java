@@ -53,6 +53,7 @@ public class gamePanel extends JPanel implements ActionListener{
             Connection conn = DriverManager.getConnection(url, username, password);
             System.out.println("Connected");
 
+            
             return conn;
         } catch(Exception e){
             System.out.println(e);
