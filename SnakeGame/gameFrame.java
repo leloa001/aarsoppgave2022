@@ -3,8 +3,8 @@ import javax.swing.*;
 
 public class gameFrame extends JFrame{
     
-    gameFrame() throws Exception{
-        
+    gameFrame(){
+
         this.add(new gamePanel());
         this.setTitle("Snake");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
