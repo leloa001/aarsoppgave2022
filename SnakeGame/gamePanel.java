@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.util.Random;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 
 
 
@@ -44,15 +45,14 @@ public class gamePanel extends JPanel implements ActionListener{
     public static Connection getConnection() throws Exception{
         try{
             String driver = "com.mysql.jdbc.Driver";
-            // url/address of the database i want to connect to
-            String url = "jdbc:mysql://localhost:3306/aarsoppgavespill";
+            // url/address of the database 
+            String url = "jdbc:mysql://10.0.0.86/snakegamescore";
             String username = "snakeGame";
-            String password = "0RKp4TJdfCpoD2mB";
+            String password = "password123";
             Class.forName(driver);
-
+            
             Connection conn = DriverManager.getConnection(url, username, password);
             System.out.println("Connected");
-
             
             return conn;
         } catch(Exception e){
@@ -66,7 +66,6 @@ public class gamePanel extends JPanel implements ActionListener{
     // setting game panel properties
     gamePanel() throws Exception{
         random = new Random();
-        getConnection();
         // Sets dimentions of the Window(Uses our previously defined variables)
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.BLACK);
@@ -105,11 +104,16 @@ public class gamePanel extends JPanel implements ActionListener{
     // Method for paintign the different graphics
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-        draw(g);
+        try {
+            draw(g);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     // Method for designing the graphics
-    public void draw(Graphics g){
+    public void draw(Graphics g) throws Exception{
         
         if(running){
             for(int i = 0; i < (SCREEN_HEIGHT/UNIT_SIZE); i++){
@@ -135,7 +139,11 @@ public class gamePanel extends JPanel implements ActionListener{
         }
         else{
             gameOver(g);
+            getConnection(applesEaten, highScore);
         }
+    }
+
+    private void getConnection(int applesEaten2, int highScore2) {
     }
 
     // Method for decideing where and when we want a apple to get created
@@ -229,7 +237,7 @@ public class gamePanel extends JPanel implements ActionListener{
     }
 
     // Method for when we want to display the game over screen
-    public void gameOver(Graphics g){
+    public void gameOver(Graphics g)throws Exception{
         // game over screen
         checkHighScore();
         gameOver = true;
@@ -242,6 +250,7 @@ public class gamePanel extends JPanel implements ActionListener{
         g.setFont(new Font("Monospaced",Font.PLAIN, 18));
         FontMetrics metricsSmall = getFontMetrics(g.getFont());
         g.drawString("Press the *SPACE* key on the keyboard to restart",  (SCREEN_WIDTH - metricsSmall.stringWidth("Press the *SPACE* key on the keyboard to restart"))/2, SCREEN_HEIGHT/2 + 200);
+        // Pushing data to database
     }
 
 
@@ -283,7 +292,12 @@ public class gamePanel extends JPanel implements ActionListener{
                     break;
                 case KeyEvent.VK_SPACE:
                     if(gameOver){
-                    draw(getGraphics());
+                    try {
+                        draw(getGraphics());
+                    } catch (Exception e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    }
                     reStart();
                 }
             }
