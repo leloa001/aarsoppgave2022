@@ -6,6 +6,9 @@ import javax.swing.*;
 import java.util.Random;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 
 
@@ -41,7 +44,7 @@ public class gamePanel extends JPanel implements ActionListener{
     Random random;
     
     // connecting to my database
-    public static Connection getConnection() throws Exception{
+    public Connection getConnection(int applesEaten) throws Exception{
         try{
             String driver = "com.mysql.jdbc.Driver";
             // url/address of the database i want to connect to
@@ -51,7 +54,12 @@ public class gamePanel extends JPanel implements ActionListener{
             Class.forName(driver);
 
             Connection conn = DriverManager.getConnection(url, username, password);
-            System.out.println("Connected");
+            String sql = "INSERT INTO scoretable (UserName, Score)" + "VALUES (?, ?)";
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, "userName");
+            preparedStatement.setString(2, "" + applesEaten + "");
+            preparedStatement.execute();
+            System.out.println("Connected to DB");
 
             return conn;
         } catch(Exception e){
@@ -65,7 +73,6 @@ public class gamePanel extends JPanel implements ActionListener{
     // setting game panel properties
     gamePanel() throws Exception{
         random = new Random();
-        getConnection();
         // Sets dimentions of the Window(Uses our previously defined variables)
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.BLACK);
@@ -104,11 +111,16 @@ public class gamePanel extends JPanel implements ActionListener{
     // Method for paintign the different graphics
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-        draw(g);
+        try {
+            draw(g);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     // Method for designing the graphics
-    public void draw(Graphics g){
+    public void draw(Graphics g) throws Exception{
         
         if(running){
             for(int i = 0; i < (SCREEN_HEIGHT/UNIT_SIZE); i++){
@@ -228,7 +240,7 @@ public class gamePanel extends JPanel implements ActionListener{
     }
 
     // Method for when we want to display the game over screen
-    public void gameOver(Graphics g){
+    public void gameOver(Graphics g) throws Exception{
         // game over screen
         checkHighScore();
         gameOver = true;
@@ -241,6 +253,7 @@ public class gamePanel extends JPanel implements ActionListener{
         g.setFont(new Font("Monospaced",Font.PLAIN, 18));
         FontMetrics metricsSmall = getFontMetrics(g.getFont());
         g.drawString("Press the *SPACE* key on the keyboard to restart",  (SCREEN_WIDTH - metricsSmall.stringWidth("Press the *SPACE* key on the keyboard to restart"))/2, SCREEN_HEIGHT/2 + 200);
+        getConnection(applesEaten);
     }
 
 
@@ -282,7 +295,12 @@ public class gamePanel extends JPanel implements ActionListener{
                     break;
                 case KeyEvent.VK_SPACE:
                     if(gameOver){
-                    draw(getGraphics());
+                    try {
+                        draw(getGraphics());
+                    } catch (Exception e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    }
                     reStart();
                 }
             }
