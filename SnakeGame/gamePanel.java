@@ -4,10 +4,14 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.Random;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 
 
 public class gamePanel extends JPanel implements ActionListener{
+
+    
     // Window size
     static final int SCREEN_WIDTH = 800;
     static final int SCREEN_HEIGHT = 800;
@@ -35,10 +39,33 @@ public class gamePanel extends JPanel implements ActionListener{
     int highScore = 0;
     Timer timer;
     Random random;
+    
+    // connecting to my database
+    public static Connection getConnection() throws Exception{
+        try{
+            String driver = "com.mysql.jdbc.Driver";
+            // url/address of the database i want to connect to
+            String url = "jdbc:mysql://10.0.0.86:3306/snakeGameDB";
+            String username = "snakeGame";
+            String password = "";
+            Class.forName(driver);
+
+            Connection conn = DriverManager.getConnection(url, username, password);
+            System.out.println("Connected");
+
+            return conn;
+        } catch(Exception e){
+            System.out.println(e);
+        }
+
+
+        return null;
+    } 
 
     // setting game panel properties
-    gamePanel(){
+    gamePanel() throws Exception{
         random = new Random();
+        getConnection();
         // Sets dimentions of the Window(Uses our previously defined variables)
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.BLACK);
