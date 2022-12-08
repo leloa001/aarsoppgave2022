@@ -51,14 +51,19 @@ public class gamePanel extends JPanel implements ActionListener{
             String url = "jdbc:mysql://10.0.0.86:3306/snakeGameDB";
             String username = "snakeGame";
             String password = "";
+            // JDBC driver connection
             Class.forName(driver);
 
+            // variable for connecting to mySQL database
             Connection conn = DriverManager.getConnection(url, username, password);
-            String sql = "INSERT INTO scoretable (UserName, Score)" + "VALUES (?, ?)";
-            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            // SQL string for score injection to my scoreTable
+            String insertScoreString = "INSERT INTO scoretable (UserName, Score)" + "VALUES (?, ?)";
+            // handling the SQL string
+            PreparedStatement preparedStatement = conn.prepareStatement(insertScoreString);
             preparedStatement.setString(1, "userName");
             preparedStatement.setString(2, "" + applesEaten + "");
             preparedStatement.execute();
+            // PrintLine so i know the connection was succsessfull
             System.out.println("Connected to DB");
 
             return conn;
