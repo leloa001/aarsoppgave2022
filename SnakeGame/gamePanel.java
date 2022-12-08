@@ -42,6 +42,7 @@ public class gamePanel extends JPanel implements ActionListener{
     int highScore = 0;
     Timer timer;
     Random random;
+    String userName = "";
     
     // connecting to my database
     public Connection getConnection(int applesEaten) throws Exception{
@@ -60,8 +61,8 @@ public class gamePanel extends JPanel implements ActionListener{
             String insertScoreString = "INSERT INTO scoretable (UserName, Score)" + "VALUES (?, ?)";
             // handling the SQL string
             PreparedStatement preparedStatement = conn.prepareStatement(insertScoreString);
-            preparedStatement.setString(1, "userName");
-            preparedStatement.setString(2, "" + applesEaten + "");
+            preparedStatement.setString(1, "" + userName + "");
+            preparedStatement.setString(2, applesEaten + "");
             preparedStatement.execute();
             // PrintLine so i know the connection was succsessfull
             System.out.println("Connected to DB");
@@ -83,6 +84,8 @@ public class gamePanel extends JPanel implements ActionListener{
         this.setBackground(Color.BLACK);
         this.setFocusable(true);
         this.addKeyListener(new myKeyAdapter());
+        System.out.println("Enter a user name:");
+        userName = System.console().readLine();
         startGame();
     }
     // Method for starting the Game
